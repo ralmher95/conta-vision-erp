@@ -8,13 +8,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar archivos de dependencias
-COPY requirements.txt .
+COPY monte-carlo/requirements.txt .
 
 # Instalar dependencias Python
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar código fuente
-COPY . .
+COPY monte-carlo/ .
 
 # Exponer puerto
 EXPOSE 8000
