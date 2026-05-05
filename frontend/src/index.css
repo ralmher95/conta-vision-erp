@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-md bg-erp-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-erp-700 focus:outline-none focus:ring-2 focus:ring-erp-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-erp-500 focus:ring-offset-2 transition-colors;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors;
+  }
+
+  .input-field {
+    @apply block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-erp-600 sm:text-sm sm:leading-6;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-sm ring-1 ring-inset ring-gray-200 p-6;
+  }
+
+  .table-container {
+    @apply overflow-x-auto rounded-lg ring-1 ring-inset ring-gray-200;
+  }
+
+  .data-table {
+    @apply min-w-full divide-y divide-gray-300;
+  }
+
+  .data-table thead {
+    @apply bg-gray-50;
+  }
+
+  .data-table thead th {
+    @apply px-3 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider;
+  }
+
+  .data-table tbody {
+    @apply divide-y divide-gray-200 bg-white;
+  }
+
+  .data-table tbody td {
+    @apply px-3 py-4 text-sm text-gray-900 whitespace-nowrap;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20;
+  }
+
+  .badge-warning {
+    @apply bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20;
+  }
+
+  .badge-danger {
+    @apply bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20;
+  }
+
+  .badge-info {
+    @apply bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20;
+  }
+}

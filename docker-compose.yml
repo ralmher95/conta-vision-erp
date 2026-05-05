@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: contavision-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_here
+      MYSQL_DATABASE: contavision_erp
+      MYSQL_USER: contavision_user
+      MYSQL_PASSWORD: contavision_password_here
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: contavision-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: contavision_erp
+      DB_USER: contavision_user
+      DB_PASSWORD: contavision_password_here
+      JWT_SECRET: CHANGE_ME_TO_A_RANDOM_64_CHAR_STRING_IN_PRODUCTION
+      JWT_EXPIRE_HOURS: 8
+      MONTE_CARLO_URL: http://montecarlo:8000
+      CORS_ORIGIN: "http://localhost:5173"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/public:/app/public
+
+  montecarlo:
+    build:
+      context: ./monte-carlo
+      dockerfile: Dockerfile
+    container_name: contavision-montecarlo
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ./monte-carlo/core:/app/core
+      - ./monte-carlo/app.py:/app/app.py
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: contavision-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:8080
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/index.html:/app/index.html
+
+volumes:
+  mysql_data:

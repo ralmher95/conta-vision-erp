@@ -1,0 +1,79 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy Backend
+        run: |
+          echo "🚀 Deploying backend to production..."
+          # Opción 1: Docker Hub + Render
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/contavision-backend:latest .
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/contavision-backend:latest
+        env:
+          DOCKER_BUILDKIT: 1
+
+      - name: Trigger Render Deploy (Backend)
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}" || echo "Render hook not configured"
+
+  deploy-monte-carlo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy Monte Carlo Service
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/contavision-monte-carlo:latest ./monte-carlo/
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/contavision-monte-carlo:latest
+
+      - name: Trigger Render Deploy (Monte Carlo)
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_MONTE_CARLO }}" || echo "Render hook not configured"
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy Frontend
+        run: |
+          docker build -f Dockerfile.frontend -t ${{ secrets.DOCKERHUB_USERNAME }}/contavision-frontend:latest .
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/contavision-frontend:latest
+
+      - name: Trigger Vercel/Netlify Deploy
+        run: |
+          # Si se usa Vercel CLI:
+          # npm install -g vercel
+          # vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+          echo "Frontend pushed to Docker Hub"
+
+  health-check:
+    needs: [deploy-backend, deploy-monte-carlo, deploy-frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Backend Health
+        run: |
+          sleep 30
+          curl -f "${{ secrets.BACKEND_URL }}/api/health" || echo "Backend health check failed"
+
+      - name: Verify Monte Carlo Health
+        run: |
+          curl -f "${{ secrets.MONTE_CARLO_URL }}/health" || echo "Monte Carlo health check failed"
+
+      - name: Verify Frontend
+        run: |
+          curl -f "${{ secrets.FRONTEND_URL }}" || echo "Frontend health check failed"

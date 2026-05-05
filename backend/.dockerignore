@@ -1,0 +1,13 @@
+# Backend PHP
+vendor/
+tests/
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# Log
+logs/
+*.log

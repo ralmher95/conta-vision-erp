@@ -1,0 +1,36 @@
+{
+    "name": "contavision/erp-backend",
+    "description": "ContaVisión ERP - Backend API REST (PHP 8 + Slim)",
+    "type": "project",
+    "require": {
+        "php": "^8.2",
+        "slim/slim": "^4.12",
+        "slim/psr7": "^1.6",
+        "firebase/php-jwt": "^6.10",
+        "ext-pdo": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "phpstan/phpstan": "^1.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "ContaVision\\Core\\": "src/Core/",
+            "ContaVision\\Modules\\Auth\\": "src/Modules/Auth/",
+            "ContaVision\\Modules\\Accounting\\": "src/Modules/Accounting/",
+            "ContaVision\\Modules\\Invoicing\\": "src/Modules/Invoicing/",
+            "ContaVision\\Modules\\Reconciliation\\": "src/Modules/Reconciliation/",
+            "ContaVision\\Modules\\Dashboard\\": "src/Modules/Dashboard/",
+            "ContaVision\\Integrations\\": "src/Integrations/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ContaVision\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

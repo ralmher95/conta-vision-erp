@@ -1,0 +1,14 @@
+# Node
+node_modules/
+dist/
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Env
+.env
+.env.local
+.env.*.local
