@@ -13,7 +13,7 @@ RUN npm ci
 COPY frontend/ /app/
 
 # Build de producción
-RUN npm run build
+RUN npx vite build
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
