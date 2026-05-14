@@ -17,7 +17,7 @@ const tipoLabels: Record<string, string> = {
 
 export default function ChartOfAccountsPage() {
   const { user } = useAuth();
-  const [cuentas, setCuentas] = useState<import('@/types/accounting').CuentaContable[]>([]);
+  const [cuentas, setCuentas] = useState<CuentaContable[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -37,7 +37,7 @@ export default function ChartOfAccountsPage() {
     } finally {
       setLoading(false);
     }
-  }, [user?.empresa_id]);
+  }, [user?.empresa_id, search]);
 
   useEffect(() => {
     fetchCuentas();

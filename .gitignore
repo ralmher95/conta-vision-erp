@@ -16,6 +16,7 @@ desktop.ini
 # Artefactos de build
 dist/
 build/
+*.tsbuildinfo
 
 # Logs
 *.log

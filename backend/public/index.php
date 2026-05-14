@@ -35,24 +35,47 @@ $app->get('/api/health', function ($request, $response) {
 
 // Auth routes
 $app->post('/api/auth/login', [\ContaVision\Modules\Auth\Controller\AuthController::class, 'login']);
-$app->get('/api/auth/me', [\ContaVision\Modules\Auth\Controller\AuthController::class, 'me']);
+$app->get('/api/auth/me', [\ContaVision\Modules\Auth\Controller\AuthController::class, 'me'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware());
 $app->post('/api/auth/logout', [\ContaVision\Modules\Auth\Controller\AuthController::class, 'logout']);
 
 // Accounting routes (protected)
-$app->get('/api/asientos', [\ContaVision\Modules\Accounting\Controller\JournalEntryController::class, 'index']);
-$app->get('/api/asientos/{id}', [\ContaVision\Modules\Accounting\Controller\JournalEntryController::class, 'show']);
-$app->post('/api/asientos', [\ContaVision\Modules\Accounting\Controller\JournalEntryController::class, 'store']);
-$app->delete('/api/asientos/{id}', [\ContaVision\Modules\Accounting\Controller\JournalEntryController::class, 'delete']);
+$app->get('/api/asientos', [\ContaVision\Modules\Accounting\Controller\JournalEntryController::class, 'index'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware())
+    ->add(new \ContaVision\Core\Middleware\RoleMiddleware('accounting.read'));
+$app->get('/api/asientos/{id}', [\ContaVision\Modules\Accounting\Controller\JournalEntryController::class, 'show'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware())
+    ->add(new \ContaVision\Core\Middleware\RoleMiddleware('accounting.read'));
+$app->post('/api/asientos', [\ContaVision\Modules\Accounting\Controller\JournalEntryController::class, 'store'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware())
+    ->add(new \ContaVision\Core\Middleware\RoleMiddleware('accounting.write'));
+$app->delete('/api/asientos/{id}', [\ContaVision\Modules\Accounting\Controller\JournalEntryController::class, 'delete'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware())
+    ->add(new \ContaVision\Core\Middleware\RoleMiddleware('accounting.write'));
 
-// Chart of Accounts routes
-$app->get('/api/cuentas', [\ContaVision\Modules\Accounting\Controller\PlanCuentaController::class, 'index']);
-$app->get('/api/cuentas/{id}', [\ContaVision\Modules\Accounting\Controller\PlanCuentaController::class, 'show']);
-$app->post('/api/cuentas', [\ContaVision\Modules\Accounting\Controller\PlanCuentaController::class, 'store']);
-$app->put('/api/cuentas/{id}', [\ContaVision\Modules\Accounting\Controller\PlanCuentaController::class, 'update']);
-$app->delete('/api/cuentas/{id}', [\ContaVision\Modules\Accounting\Controller\PlanCuentaController::class, 'delete']);
+// Chart of Accounts routes (protected)
+$app->get('/api/cuentas', [\ContaVision\Modules\Accounting\Controller\PlanCuentaController::class, 'index'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware())
+    ->add(new \ContaVision\Core\Middleware\RoleMiddleware('accounting.read'));
+$app->get('/api/cuentas/{id}', [\ContaVision\Modules\Accounting\Controller\PlanCuentaController::class, 'show'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware())
+    ->add(new \ContaVision\Core\Middleware\RoleMiddleware('accounting.read'));
+$app->post('/api/cuentas', [\ContaVision\Modules\Accounting\Controller\PlanCuentaController::class, 'store'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware())
+    ->add(new \ContaVision\Core\Middleware\RoleMiddleware('accounting.write'));
+$app->put('/api/cuentas/{id}', [\ContaVision\Modules\Accounting\Controller\PlanCuentaController::class, 'update'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware())
+    ->add(new \ContaVision\Core\Middleware\RoleMiddleware('accounting.write'));
+$app->delete('/api/cuentas/{id}', [\ContaVision\Modules\Accounting\Controller\PlanCuentaController::class, 'delete'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware())
+    ->add(new \ContaVision\Core\Middleware\RoleMiddleware('accounting.write'));
 
-// Dashboard routes
-$app->get('/api/dashboard/kpis', [\ContaVision\Modules\Dashboard\Controller\DashboardController::class, 'kpis']);
-$app->get('/api/dashboard/treasury', [\ContaVision\Modules\Dashboard\Controller\TreasuryController::class, 'simulate']);
+// Dashboard routes (protected)
+$app->get('/api/dashboard/kpis', [\ContaVision\Modules\Dashboard\Controller\DashboardController::class, 'kpis'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware())
+    ->add(new \ContaVision\Core\Middleware\RoleMiddleware('dashboard.read'));
+$app->get('/api/dashboard/treasury', [\ContaVision\Modules\Dashboard\Controller\TreasuryController::class, 'simulate'])
+    ->add(new \ContaVision\Core\Middleware\AuthMiddleware())
+    ->add(new \ContaVision\Core\Middleware\RoleMiddleware('treasury.read'));
 
 $app->run();
