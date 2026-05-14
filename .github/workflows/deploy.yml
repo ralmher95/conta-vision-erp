@@ -9,14 +9,20 @@ jobs:
   deploy-backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Deploy Backend
-        run: |
-          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/contavision-backend:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/contavision-backend:latest
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and push Backend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/contavision-backend:latest
 
       - name: Trigger Render Deploy (Backend)
         run: |
@@ -25,14 +31,20 @@ jobs:
   deploy-monte-carlo:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Deploy Monte Carlo Service
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/contavision-monte-carlo:latest ./monte-carlo/
-          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/contavision-monte-carlo:latest
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and push Monte Carlo
+        uses: docker/build-push-action@v6
+        with:
+          context: ./monte-carlo
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/contavision-monte-carlo:latest
 
       - name: Trigger Render Deploy (Monte Carlo)
         run: |
@@ -41,20 +53,24 @@ jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Deploy Frontend
-        run: |
-          docker build -f Dockerfile.frontend -t ${{ secrets.DOCKERHUB_USERNAME }}/contavision-frontend:latest .
-          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/contavision-frontend:latest
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and push Frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.frontend
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/contavision-frontend:latest
 
       - name: Trigger Vercel/Netlify Deploy
         run: |
-          # Si se usa Vercel CLI:
-          # npm install -g vercel
-          # vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
           echo "Frontend pushed to Docker Hub"
 
   health-check:
