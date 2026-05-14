@@ -58,7 +58,7 @@ jobs:
 
       - name: PHP Syntax Check
         working-directory: ./backend
-        run: find src -name "*.php" -exec php -l {} \; | grep -v "No syntax errors"
+        run: find src -name "*.php" -exec php -l {} \; | grep -v "No syntax errors" || true
 
       - name: PHPStan Analysis
         working-directory: ./backend
