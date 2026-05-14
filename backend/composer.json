@@ -6,7 +6,7 @@
         "php": "^8.2",
         "slim/slim": "^4.12",
         "slim/psr7": "^1.6",
-        "firebase/php-jwt": "^6.10",
+        "firebase/php-jwt": "^7.0",
         "ext-pdo": "*",
         "ext-json": "*"
     },
