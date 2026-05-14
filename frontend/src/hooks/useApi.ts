@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import api from '@/services/api';
 
 interface UseApiState<T> {
   data: T | null;

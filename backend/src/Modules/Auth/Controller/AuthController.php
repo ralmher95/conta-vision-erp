@@ -211,7 +211,7 @@ class AuthController
             'nombre' => $body['nombre_completo'],
             'email' => $body['email'],
             'hash' => $passwordHash,
-            'rol_id' => $body['rol_id'] ?? 2, // Por defecto: contable
+            'rol_id' => $body['rol_id'] ?? 2,
             'empresa_id' => $body['empresa_id'] ?? null
         ]);
 
@@ -223,5 +223,19 @@ class AuthController
         ]));
         return $response->withStatus(201)
             ->withHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * POST /api/auth/logout
+     *
+     * Cierra la sesión del usuario. Como usamos JWT (stateless),
+     * el cliente debe eliminar el token del almacenamiento local.
+     */
+    public function logout(RequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $response->getBody()->write(json_encode([
+            'message' => 'Sesión cerrada exitosamente'
+        ]));
+        return $response->withHeader('Content-Type', 'application/json');
     }
 }

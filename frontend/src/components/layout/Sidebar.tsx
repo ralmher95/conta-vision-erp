@@ -6,7 +6,6 @@ import {
   FileText,
   Landmark,
   TrendingUp,
-  Settings,
   LogOut,
   ChevronDown,
   ChevronRight,
@@ -46,7 +45,7 @@ export default function Sidebar() {
       icon: <BookOpen className="h-5 w-5" />,
       permission: 'accounting.read',
       children: [
-        { label: 'Plan de Cuentas', path: '/contabilidad/cuentas' },
+        { label: 'Plan de Cuentas', path: '/contabilidad/plan-cuentas' },
         { label: 'Libro Diario', path: '/contabilidad/diario' },
         { label: 'Libro Mayor', path: '/contabilidad/mayor' },
         { label: 'Balance', path: '/contabilidad/balance' },

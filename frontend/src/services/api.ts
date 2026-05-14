@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_BASE_URL = (import.meta as any).env.VITE_API_URL || 'http://localhost:8080';
 
 /**
  * Instancia de Axios configurada para la API de ContaVisión ERP.

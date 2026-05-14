@@ -1,5 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import api from '@/services/api';
 import Sidebar from '@/components/layout/Sidebar';
 import TopBar from '@/components/layout/TopBar';
 import MonteCarloBandChart from '@/components/charts/MonteCarloBandChart';

@@ -54,7 +54,7 @@ const kpiConfig: {
     icon: <TrendingUp className="h-5 w-5" />,
     format: (v) => (v * 100).toFixed(1) + '%',
     trendUp: true,
-    color: 'bg-purple-500',
+    color: 'bg-indigo-500',
   },
   {
     key: 'cuentas_cobrar',
@@ -86,7 +86,7 @@ const kpiConfig: {
     icon: <Building2 className="h-5 w-5" />,
     format: formatCurrency,
     trendUp: true,
-    color: 'bg-teal-500',
+    color: 'bg-cyan-500',
   },
 ];
 
@@ -119,7 +119,7 @@ export default function KpiCards({ data, loading }: KpiCardsProps) {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {kpiConfig.map(({ key, label, icon, format, trendUp, color }) => {
+      {kpiConfig.map(({ key, label, icon, format, color }) => {
         const value = data[key];
 
         return (

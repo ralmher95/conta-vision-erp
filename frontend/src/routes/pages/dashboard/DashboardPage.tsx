@@ -66,7 +66,7 @@ export default function DashboardPage() {
       legend: { position: 'top' as const },
       tooltip: {
         callbacks: {
-          label: (context: { dataset: { label: string }; parsed: { y: number } }) =>
+          label: (context: any) =>
             `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`,
         },
       },
@@ -74,8 +74,8 @@ export default function DashboardPage() {
     scales: {
       y: {
         ticks: {
-          callback: (value: number) =>
-            `${(value / 1000).toFixed(0)}k`,
+          callback: (value: string | number) =>
+            `$${(Number(value) / 1000).toFixed(0)}k`,
         },
       },
     },

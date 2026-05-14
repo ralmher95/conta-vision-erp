@@ -5,7 +5,7 @@ import Sidebar from '@/components/layout/Sidebar';
 import TopBar from '@/components/layout/TopBar';
 import { Plus, Search } from 'lucide-react';
 import { formatCurrency } from '@/utils/formatters';
-import type { PlanCuenta } from '@/types/accounting';
+import type { CuentaContable } from '@/types/accounting';
 
 const tipoLabels: Record<string, string> = {
   activo: 'Activo',
@@ -17,7 +17,7 @@ const tipoLabels: Record<string, string> = {
 
 export default function ChartOfAccountsPage() {
   const { user } = useAuth();
-  const [cuentas, setCuentas] = useState<PlanCuenta[]>([]);
+  const [cuentas, setCuentas] = useState<import('@/types/accounting').CuentaContable[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -28,9 +28,9 @@ export default function ChartOfAccountsPage() {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get<{ cuentas: PlanCuenta[] }>(
-        `/api/cuentas?empresa_id=${user.empresa_id}`
-      );
+       const response = await api.get<{ cuentas: CuentaContable[] }>(
+         `/api/cuentas?empresa_id=${user.empresa_id}&search=${search}`
+       );
       setCuentas(response.data.cuentas || response.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error cargando cuentas');

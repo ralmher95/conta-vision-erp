@@ -111,20 +111,20 @@ export default function MonteCarloBandChart({ meses, global }: MonteCarloBandCha
           font: { size: 11 },
         },
       },
-      tooltip: {
-        callbacks: {
-          label: (context: { dataset: { label: string }; parsed: { y: number } }) => {
-            const label = context.dataset.label || '';
-            const value = context.parsed.y;
-            return `${label}: ${formatCurrency(value)}`;
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              const label = context.dataset.label || '';
+              const value = context.parsed.y;
+              return `${label}: ${formatCurrency(value)}`;
+            },
           },
         },
-      },
     },
     scales: {
       y: {
         ticks: {
-          callback: (value: number) => formatCurrency(value, 'EUR').replace(',00', ''),
+          callback: (value: string | number) => formatCurrency(Number(value), 'EUR').replace(',00', ''),
           font: { size: 10 },
         },
         grid: {
