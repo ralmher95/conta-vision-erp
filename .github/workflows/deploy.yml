@@ -14,13 +14,9 @@ jobs:
 
       - name: Deploy Backend
         run: |
-          echo "🚀 Deploying backend to production..."
-          # Opción 1: Docker Hub + Render
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/contavision-backend:latest .
           echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/contavision-backend:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/contavision-backend:latest
-        env:
-          DOCKER_BUILDKIT: 1
 
       - name: Trigger Render Deploy (Backend)
         run: |
